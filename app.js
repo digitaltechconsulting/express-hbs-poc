@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var jsonBodyParser = require('body-parser');
+var session = require('express-session');
 //var bodyParser = require('body')
 var logger = require('morgan');
 var hbs = require('express-handlebars')
@@ -12,6 +13,7 @@ var usersRouter = require('./routes/users');
 var aboutRouter = require('./routes/about');
 var loginRouter = require('./routes/login');
 const { RequestHeaderFieldsTooLarge } = require('http-errors');
+const { executionAsyncResource } = require('async_hooks');
 
 //we can use regular expresstions
 
@@ -32,9 +34,16 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
 
+
 //app.router is deprecated!
 //app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'some secret value',
+  saveUninitialized: false,
+  resave: false
+}));
 
 //connect is used by express
 
